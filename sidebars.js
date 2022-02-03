@@ -28,6 +28,7 @@ const sidebars = {
       items: [
         'offer/duplicate-number-in-array',
         'offer/search-number-in-2d-array',
+        'offer/replace-space',
       ],
     },
   ]

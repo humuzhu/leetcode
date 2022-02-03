@@ -1,0 +1,57 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 05. 替换空格
+
+## 题目
+
+请实现一个函数，把字符串 s 中的每个空格替换成"%20"。
+
+:::info 力扣（LeetCode）
+
+链接：https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/
+
+:::
+
+## 审题
+
+基础题目，字符串的遍历。
+
+## 解题
+
+### 解法一 朴素法
+
+创建一个字符数组，遍历字符串时若遇到空格，则写入给定字符串。
+
+需要注意语言中字符串的表示。 不要拼接字符串，在大部分语言中效率都很低。
+
+#### 复杂度分析
+
+时间复杂度是$O(n)$。
+
+空间复杂度为$O(n)$。
+
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func replaceSpace(s string) string {
+    buf := make([]rune, 0, len(s))
+
+    for _, v := range s {
+        if v == ' ' {
+            buf = append(buf, []rune("%20")...)
+        }else {
+            buf = append(buf, v)
+        }
+    }
+
+    return string(buf)
+}
+```
+
+  </TabItem>
+</Tabs>
