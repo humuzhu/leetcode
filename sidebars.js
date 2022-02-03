@@ -25,7 +25,10 @@ const sidebars = {
         type: 'doc',
         id: 'offer/index'
       },
-      items: ['offer/duplicate-number-in-array'],
+      items: [
+        'offer/duplicate-number-in-array',
+        'offer/search-number-in-2d-array',
+      ],
     },
   ]
 };

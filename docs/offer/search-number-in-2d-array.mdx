@@ -1,0 +1,105 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 04. 二维数组中的查找
+
+## 题目
+
+在一个 $n * m$ 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
+
+请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+
+限制条件：
+- $0 \leq n \leq1000$
+- $0 \leq m \leq 1000$
+
+:::info 力扣（LeetCode）
+
+链接：https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof
+
+:::
+
+## 审题
+
+基础题目，考察二维数组的遍历和排序后数组的性质。
+
+## 解题
+
+### 解法一 枚举法
+
+遍历二维数组的每个元素，自然可以完成查找任务。
+
+#### 复杂度分析
+
+最差的情况下，需要遍历所有元素，因此时间复杂度是$O(nm)$。
+
+没有使用额外的存储空间，因此空间复杂度为$O(1)$。
+
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func findNumberIn2DArray(matrix [][]int, target int) bool {
+    for _, row := range matrix {
+        for _, v := range row {
+            if v == target {
+                return true
+            }
+        }
+    }
+    return false
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### 解法二 排除法
+
+解法一并没有使用到数组中的行和列都是已序的性质，解法二中我们来看看如何运用。
+
+**对于每一行的最后一个元素**，若查找值大于它，则可以排除本行；若查找值小于它，则可以排除本列。
+
+#### 复杂度分析
+
+最多经过$n+m-1$步，我们可以将矩阵排除为空，因此时间复杂度为$O(n+m)$。
+
+没有使用额外的存储空间，因此空间复杂度为$O(1)$。
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func findNumberIn2DArray(matrix [][]int, target int) bool {
+    n := len(matrix)
+    if n == 0 {
+        return false
+    }
+
+    m := len(matrix[0])
+    if m == 0 {
+        return false
+    }
+
+    row, col := 0, m - 1
+    for row < n && col >= 0 {
+        if v := matrix[row][col]; v == target {
+            return true
+        }else if v > target {
+            col--
+        }else {
+            row++
+        }
+    }
+
+    return false
+}
+```
+
+  </TabItem>
+</Tabs>
