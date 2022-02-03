@@ -1,0 +1,156 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 06. 从尾到头打印链表
+
+## 题目
+
+输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+
+:::info 力扣（LeetCode）
+
+链接：https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/
+
+:::
+
+## 审题
+
+基础题目，考察单链表的遍历。
+
+## 解题
+
+### 解法一 数组逆序法
+
+顺序访问单链表，将结果存储在数组中，最后将数组逆序即可。
+
+#### 复杂度分析
+
+时间复杂度是$O(n)$。
+
+空间复杂度为$O(n)$。
+
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func replaceSpace(s string) string {
+    buf := make([]rune, 0, len(s))
+
+    for _, v := range s {
+        if v == ' ' {
+            buf = append(buf, []rune("%20")...)
+        }else {
+            buf = append(buf, v)
+        }
+    }
+
+    return string(buf)
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### 解法二 递归法
+
+若当前节点为空，则返回。若当前节点不为空，则递归存入后继，
+然后再将当前节点存入数组。
+
+:::caution
+
+当节点过多时，此方法可能导致栈溢出。
+
+:::
+
+#### 复杂度分析
+
+时间复杂度是$O(n)$。
+
+虽然没有使用辅助空间，但是递归调用时会消耗函数调用栈帧，因此空间复杂度为$O(n)$。
+
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func reversePrint(head *ListNode) []int {
+    rev := make([]int, 0)
+    traverse(head, &rev)
+    return rev
+}
+
+func traverse(head *ListNode, rev *[]int) {
+    if head == nil {
+        return
+    }
+
+    traverse(head.Next, rev)
+    *rev = append(*rev, head.Val)
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### 解法三 栈法
+
+顺序访问单链表，将结果存入栈中，然后将结果从栈中取出，既可以得到逆序后的结果。
+
+此方法与递归法等价。使用显示的栈数据结构，替代了递归调用栈，避免了栈溢出的可能。
+
+#### 复杂度分析
+
+时间复杂度是$O(n)$。
+
+空间复杂度是$O(n)$。
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func reversePrint(head *ListNode) []int {
+    s := &Stack{}
+    for ;head != nil; head = head.Next {
+        s.Push(head.Val)
+    }
+
+    rev := make([]int, 0, s.Size())
+    for !s.Empty() {
+        rev = append(rev, s.Pop())
+    }
+    return rev
+}
+
+type Stack struct {
+    backend []int
+}
+
+func (s *Stack) Empty() bool {
+    return len(s.backend) == 0
+}
+
+func (s *Stack) Size() int {
+    return len(s.backend)
+}
+
+func (s *Stack) Push(v int) {
+    s.backend = append(s.backend, v)
+}
+
+func (s *Stack) Pop() int {
+    n := s.Size()
+    v := s.backend[n-1]
+    s.backend = s.backend[:n-1]
+    return v
+}
+```
+
+  </TabItem>
+</Tabs>

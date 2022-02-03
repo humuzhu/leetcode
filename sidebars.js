@@ -29,6 +29,7 @@ const sidebars = {
         'offer/duplicate-number-in-array',
         'offer/search-number-in-2d-array',
         'offer/replace-space',
+        'offer/reverse-print-link-list',
       ],
     },
   ]
