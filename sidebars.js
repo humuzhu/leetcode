@@ -25,7 +25,7 @@ const sidebars = {
         type: 'doc',
         id: 'offer/index'
       },
-      items: ['offer/duplicated-number-in-array'],
+      items: ['offer/duplicate-number-in-array'],
     },
   ]
 };
