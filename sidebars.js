@@ -30,6 +30,7 @@ const sidebars = {
         'offer/search-number-in-2d-array',
         'offer/replace-space',
         'offer/reverse-print-link-list',
+        'offer/max-gift-value',
       ],
     },
   ]
