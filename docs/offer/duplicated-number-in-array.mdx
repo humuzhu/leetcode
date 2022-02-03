@@ -1,0 +1,95 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 03. 数组中重复的数字
+
+## 题目
+
+在一个长度为 `n` 的数组 `nums` 里的所有数字都在 `0 ~ n-1` 的范围内。
+
+数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。
+
+请找出数组中任意一个重复的数字。
+
+限制：`2 <= n <= 100000`
+
+:::info 力扣（LeetCode）
+
+链接：https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof
+
+:::
+
+## 审题
+
+基础题目，考查数组和散列表的应用。
+
+## 解题
+
+### 解法一 枚举比较法
+
+将数组分为头部元素和剩余数组，若头部元素出现在剩余数组中，则找到了重复数字。
+若未出现，继续从剩余数组中取出头部元素，循环至数组为空，即不存在重复数字。
+
+#### 复杂度分析
+
+在数组没有重复元素的情况下，比较次数为$\sum_{i=1}^{n} (n-i) = \frac{n(n-1)}{2}$。因此时间复杂度为$O(n^2)$。
+
+没有使用额外的存储空间，因此空间复杂度为$O(1)$。
+
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func findRepeatNumber(nums []int) int {
+    for i, v := range nums {
+        for _, u := range nums[i+1:] {
+            if u == v {
+                return v
+            }
+        }
+    }
+    panic("unreachable")
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### 解法二 散列表查找法
+
+解法一中，重复比较的目的是确定元素是否在剩余数组中。可以通过使用散列表，将
+查找的开销降低至常数时间。
+
+在遍历数组时，我们将遍历过的元素存入散列表。若发现元素在散列表中已经存在，表明
+我们已经发现了一个重复数字。
+
+
+#### 复杂度分析
+
+我们只遍历了一次数组，因此时间复杂度为$O(n)$。
+
+我们使用了散列表来存储已访问过的元素，最坏情况下存入$n$个元素，因此空间复杂度为$O(n)$。
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func findRepeatNumber(nums []int) int {
+    m := make(map[int]struct{})
+    for _, v := range nums {
+        if _, ok := m[v]; ok {
+            return v
+        }
+        m[v] = struct{}{}
+    }
+    panic("unreachable")
+}
+```
+
+  </TabItem>
+</Tabs>
