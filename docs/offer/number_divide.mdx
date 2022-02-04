@@ -1,0 +1,139 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 01. 整数除法
+
+## 题目
+
+给定两个整数 $a$ 和 $b$ ，求它们的除法的商 $\frac{a}{b}$ ，要求不得使用乘号 '*'、除号 '/' 以及求余符号 '%' 。
+
+:::info 力扣（LeetCode）
+
+链接：https://leetcode-cn.com/problems/xoh6Oh/
+
+:::
+
+## 解题
+
+### 解法一 模拟法
+
+从被除数中不断的减去除数，当被除数小于除数时，即完成了计算。
+
+注意溢出条件，只有一种情况下会溢出，即被除数为负数最大值，除数为-1时。
+
+#### 复杂度分析
+
+时间复杂度是减法执行的次数，为$O(\frac{| a |}{|b|})$。
+
+空间复杂度为$O(1)$。
+
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func divide(a int, b int) int {
+    if a == math.MinInt32 && b == -1 {
+        return math.MaxInt32
+    }
+
+    sign := 0
+
+    if a < 0 {
+        sign++
+    }
+
+    if b < 0 {
+        sign++
+    }
+
+    a, b = abs(a), abs(b)
+
+    i := 0
+    for a >= b {
+        a -= b
+        i++
+    }
+
+    if sign == 1 {
+        return -i
+    }
+    return i
+}
+
+func abs(u int) int {
+    if u > 0 {
+        return u
+    }
+    return -u
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### 解法二 模拟法+指数分解
+
+第一种解法，当除数为1，被除数为$2^{31} - 1$时会超时。如何优化减法次数呢？
+
+可以考虑每次减去除数的$2^j$倍，其中$2^{j+1} > dividend$。
+
+
+#### 复杂度分析
+
+计算$j$的循环次数最多32次，外层的减法循环最多32次，因此时间复杂度为常数。
+
+空间复杂度为$O(1)$。
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func divide(a int, b int) int {
+    if a == math.MinInt32 && b == -1 {
+        return math.MaxInt32
+    }
+
+    sign := 0
+
+    if a < 0 {
+        sign++
+    }
+
+    if b < 0 {
+        sign++
+    }
+
+    a, b = abs(a), abs(b)
+
+    i := 0
+    for a >= b {
+        u, v := b, 1
+        for a >= (u + u) {
+            u += u
+            v += v
+        }
+        a -= u // u = 2^j * b
+        i += v // v = 2^j
+    }
+
+    if sign == 1 {
+        return -i
+    }
+    return i
+}
+
+func abs(u int) int {
+    if u > 0 {
+        return u
+    }
+    return -u
+}
+```
+
+  </TabItem>
+</Tabs>

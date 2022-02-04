@@ -1,0 +1,119 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 68. 二叉树的最近公共祖先
+
+## 题目
+
+给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+
+百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+
+
+限制条件：
+- 所有节点的值都是唯一的。
+- p、q 为不同节点且均存在于给定的二叉树中。
+
+:::info 力扣（LeetCode）
+
+链接：https://leetcode-cn.com/problems/er-cha-shu-de-zui-jin-gong-gong-zu-xian-lcof
+
+:::
+
+## 解题
+
+### 解法一 标记法
+
+遍历树节点，构造父节点哈希表，然后从目标节点向上访问至根节点，并沿途标记。
+对第二个目标节点访问时，若遇到已标记的节点，即找到了最近公共祖先。
+
+#### 复杂度分析
+
+时间复杂度为$O(n)$。
+空间复杂度为$O(N)$。
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    f := map[*TreeNode]*TreeNode{}
+    v := map[*TreeNode]bool{}
+
+    dfs(f, root)
+
+    for p != nil {
+        v[p] = true
+        p = f[p]
+    }
+
+    for q != nil {
+        if _, ok := v[q]; ok {
+            return q
+        }
+        v[q] = true
+        q = f[q]
+    }
+
+    panic("unreachable")
+}
+
+
+func dfs(f map[*TreeNode]*TreeNode, root *TreeNode) {
+    if root.Left != nil {
+        f[root.Left] = root
+        dfs(f, root.Left)
+    }
+
+    if root.Right != nil {
+        f[root.Right] = root
+        dfs(f, root.Right)
+    }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+
+### 解法二 递归法
+
+可以根据限制条件分解问题。
+
+1. 若当前节点时目标结点之一，则当前节点一定是解。（不存在重复节点，且另一个目标节点一定是当前节点的子孙）
+2. 若不满足第一种情况，则分别在左右子树中寻找目标节点。
+3. 若左右个找到一个，当前节点即为解。否则，返回左子树或右子树的解。
+
+#### 复杂度分析
+
+时间复杂度为$O(n)$。
+空间复杂度为$O(N)$。
+
+#### 源代码
+
+<Tabs>
+  <TabItem value="go" label="Go" default>
+
+```go
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    if root == nil || root == p || root == q {
+        return root
+    }
+
+    left, right := lowestCommonAncestor(root.Left, p, q), lowestCommonAncestor(root.Right, p, q)
+    if left == nil {
+        return right
+    }
+
+    if right == nil {
+        return left
+    }
+
+    return root
+}
+```
+
+  </TabItem>
+</Tabs>
